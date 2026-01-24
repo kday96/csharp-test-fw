@@ -1,0 +1,14 @@
+**/bin/
+**/obj/
+**/TestResults/
+**/.vs/
+*.user
+*.suo
+*.cache
+.DS_Store
+
+# Ignore test logs
+/Tests/Logs/
+
+# Ignore generated reports and screenshots
+/Reports_Screenshots/
