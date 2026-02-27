@@ -14,21 +14,21 @@ pipeline {
 
         stage('Restore') {
             steps {
-                echo "Restoring dependencies for configuration: ${BUILD_CONFIGURATION}"
+                echo "Restoring dependencies for configuration: ${env.BUILD_CONFIGURATION}"
                 sh 'echo dotnet restore'
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building solution with configuration: ${BUILD_CONFIGURATION}"
+                echo "Building solution with configuration: ${env.BUILD_CONFIGURATION}"
                 sh 'echo dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
             }
         }
 
         stage('Test') {
             steps {
-                echo "Running tests with configuration: ${BUILD_CONFIGURATION}"
+                echo "Running tests with configuration: ${env.BUILD_CONFIGURATION}"
                 sh 'echo dotnet test --logger trx --configuration ${BUILD_CONFIGURATION} --no-build'
             }
         }
