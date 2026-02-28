@@ -15,28 +15,29 @@ pipeline {
         stage('Restore') {
             steps {
                 echo "Restoring dependencies for configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'echo dotnet restore'
+                sh 'dotnet restore'
             }
         }
 
         stage('Build') {
             steps {
                 echo "Building solution with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'echo dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
+                sh 'dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
             }
         }
 
         stage('Test') {
             steps {
                 echo "Running tests with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'echo dotnet test --logger trx --configuration ${BUILD_CONFIGURATION} --no-build'
+                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --no-restore --logger "trx;LogFileName=test_results.trx"'
             }
         }
     }
 
     post {
         always {
-            echo "Pipeline finished. Cleaning up workspace."
+            echo "Pipeline finished. Publishing test results."
+            junit '**/TestResults/**/*.trx'
         }
         success {
             echo "Pipeline succeeded!"
