@@ -30,7 +30,7 @@ pipeline {
         stage('Test') {
             steps {
                 echo "Running tests with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'dotnet test --configuration "${BUILD_CONFIGURATION}" --no-build --no-restore --logger "trx;LogFileName=test_results.trx"'
+                sh 'dotnet test --configuration "${BUILD_CONFIGURATION}" --no-build --no-restore --logger "junit;LogFilePath=TestResults/junit.xml"'
             }
         }
     }
@@ -38,7 +38,7 @@ pipeline {
     post {
         always {
             echo "Pipeline finished. Publishing test results."
-            junit '**/TestResults/**/*.trx'
+            junit '**/TestResults/**/*.xml'
         }
         success {
             echo "Pipeline succeeded!"
