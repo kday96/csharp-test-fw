@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         BUILD_CONFIGURATION = "Release"
+        PATH = "/usr/local/share/dotnet:${env.PATH}"
     }
 
     stages {
@@ -22,14 +23,14 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building solution with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
+                sh 'dotnet build --configuration "${BUILD_CONFIGURATION}" --no-restore'
             }
         }
 
         stage('Test') {
             steps {
                 echo "Running tests with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --no-restore --logger "trx;LogFileName=test_results.trx"'
+                sh 'dotnet test --configuration "${BUILD_CONFIGURATION}" --no-build --no-restore --logger "trx;LogFileName=test_results.trx"'
             }
         }
     }
