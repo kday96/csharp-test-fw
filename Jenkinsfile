@@ -35,7 +35,7 @@ pipeline {
         stage('Build') {
             steps {
                 echo "Building solution with configuration: ${params.BUILD_CONFIGURATION}"
-                sh 'dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
+                sh "dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore"
             }
         }
 
@@ -47,7 +47,7 @@ pipeline {
             }
             steps {
                 echo "Running tests with configuration: ${params.BUILD_CONFIGURATION}"
-                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --no-restore --logger "junit;LogFilePath=TestResults/junit.xml"'
+                sh "dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --no-restore --logger \"junit;LogFilePath=TestResults/junit.xml\""
             }
         }
     }
