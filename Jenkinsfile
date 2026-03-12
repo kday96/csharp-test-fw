@@ -2,8 +2,20 @@ pipeline {
     agent any
 
     environment {
-        BUILD_CONFIGURATION = "Release"
         PATH = "/usr/local/share/dotnet:${env.PATH}"
+    }
+
+    parameters {
+        choice(
+            name: 'BUILD_CONFIGURATION',
+            choices: ['Debug', 'Release'],
+            description: 'Select the build configuration'
+        )
+        booleanParam(
+            name: 'RUN_TESTS',
+            defaultValue: true,
+            description: 'Whether to run tests after building'
+        )
     }
 
     stages {
@@ -15,22 +27,27 @@ pipeline {
 
         stage('Restore') {
             steps {
-                echo "Restoring dependencies for configuration: ${env.BUILD_CONFIGURATION}"
+                echo "Restoring dependencies for configuration: ${params.BUILD_CONFIGURATION}"
                 sh 'dotnet restore'
             }
         }
 
         stage('Build') {
             steps {
-                echo "Building solution with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'dotnet build --configuration "${BUILD_CONFIGURATION}" --no-restore'
+                echo "Building solution with configuration: ${params.BUILD_CONFIGURATION}"
+                sh 'dotnet build --configuration ${BUILD_CONFIGURATION} --no-restore'
             }
         }
 
         stage('Test') {
+            when {
+                expression {
+                    params.RUN_TESTS == true
+                }
+            }
             steps {
-                echo "Running tests with configuration: ${env.BUILD_CONFIGURATION}"
-                sh 'dotnet test --configuration "${BUILD_CONFIGURATION}" --no-build --no-restore --logger "junit;LogFilePath=TestResults/junit.xml"'
+                echo "Running tests with configuration: ${params.BUILD_CONFIGURATION}"
+                sh 'dotnet test --configuration ${BUILD_CONFIGURATION} --no-build --no-restore --logger "junit;LogFilePath=TestResults/junit.xml"'
             }
         }
     }
