@@ -56,6 +56,7 @@ pipeline {
         always {
             echo "Pipeline finished. Publishing test results."
             junit '**/TestResults/**/*.xml'
+            archiveArtifacts artifacts: 'Reports_Screenshots/**', fingerprint: true, allowEmptyArchive: true
         }
         success {
             echo "Pipeline succeeded!"
